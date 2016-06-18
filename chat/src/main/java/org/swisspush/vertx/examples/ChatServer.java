@@ -2,8 +2,11 @@ package org.swisspush.vertx.examples;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
+import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.json.JsonObject;
+import io.vertx.core.logging.Logger;
+import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.auth.shiro.ShiroAuthOptions;
 import io.vertx.ext.shell.ShellService;
 import io.vertx.ext.shell.ShellServiceOptions;
@@ -20,22 +23,26 @@ import java.util.Date;
 
 /**
  * A {@link io.vertx.core.Verticle} which implements a simple, realtime,
- * multiuser chat. Anyone can connect to the chat application on port
- * 8000 and type messages. The messages will be rebroadcast to all
- * connected users via the @{link EventBus} Websocket bridge.
- *
- * @author <a href="https://github.com/InfoSec812">Deven Phillips</a>
+ * multiuser chat.
  */
 public class ChatServer extends AbstractVerticle {
 
+  private Logger log = LoggerFactory.getLogger(ChatServer.class);
+
   @Override
   public void start(Future<Void> startFuture) throws Exception {
+
+    int shellPort = 8989;
+    try {
+      shellPort = Integer.valueOf(System.getProperty("shellPort"));
+    } catch(Exception e) { /* nothing to do here, shellPort wasn't set */}
+    log.info("shell port: " + shellPort);
 
     ShellService service = ShellService.create(vertx, new ShellServiceOptions().
             setHttpOptions(
                     new HttpTermOptions().
                             setHost("localhost").
-                            setPort(8989).
+                            setPort(shellPort).
                             setAuthOptions(new ShiroAuthOptions().
                                     setConfig(new JsonObject().put("properties_path", "auth.properties")))));
     service.start(ar -> {
@@ -60,8 +67,14 @@ public class ChatServer extends AbstractVerticle {
     // Create a router endpoint for the static content.
     router.route().handler(StaticHandler.create());
 
+    int httpPort = 8080;
+    try {
+      httpPort = Integer.valueOf(System.getProperty("httpPort"));
+    } catch(Exception e) { /* nothing to do here, shellPort wasn't set */}
+    log.info("http port: " + httpPort);
+
     // Start the web server and tell it to use the router to handle requests.
-    vertx.createHttpServer().requestHandler(router::accept).listen(8080);
+    vertx.createHttpServer().requestHandler(router::accept).listen(httpPort);
 
     EventBus eb = vertx.eventBus();
 
