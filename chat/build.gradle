@@ -38,6 +38,9 @@ buildscript {
 dependencies {
     compile "io.vertx:vertx-core:$vertxVersion"
     compile "io.vertx:vertx-web:$vertxVersion"
+    compile "io.vertx:vertx-shell:$vertxVersion"
+    compile "io.vertx:vertx-auth-shiro:$vertxVersion"
+    compile "org.slf4j:slf4j-api:1.7.21"
 }
 
 compileJava {
