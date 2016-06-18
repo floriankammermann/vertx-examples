@@ -1,8 +1,13 @@
-package io.vertx.example.web.chat;
+package org.swisspush.vertx.examples;
 
 import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
 import io.vertx.core.eventbus.EventBus;
-import io.vertx.example.util.Runner;
+import io.vertx.core.json.JsonObject;
+import io.vertx.ext.auth.shiro.ShiroAuthOptions;
+import io.vertx.ext.shell.ShellService;
+import io.vertx.ext.shell.ShellServiceOptions;
+import io.vertx.ext.shell.term.HttpTermOptions;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.StaticHandler;
 import io.vertx.ext.web.handler.sockjs.BridgeOptions;
@@ -21,10 +26,25 @@ import java.util.Date;
  *
  * @author <a href="https://github.com/InfoSec812">Deven Phillips</a>
  */
-public class Server extends AbstractVerticle {
+public class ChatServer extends AbstractVerticle {
 
   @Override
-  public void start() throws Exception {
+  public void start(Future<Void> startFuture) throws Exception {
+
+    ShellService service = ShellService.create(vertx, new ShellServiceOptions().
+            setHttpOptions(
+                    new HttpTermOptions().
+                            setHost("localhost").
+                            setPort(8989).
+                            setAuthOptions(new ShiroAuthOptions().
+                                    setConfig(new JsonObject().put("properties_path", "auth.properties")))));
+    service.start(ar -> {
+      if (ar.succeeded()) {
+        startFuture.succeeded();
+      } else {
+        startFuture.fail(ar.cause());
+      }
+    });
 
     Router router = Router.router(vertx);
 
