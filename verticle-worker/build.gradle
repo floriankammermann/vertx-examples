@@ -1,0 +1,80 @@
+apply plugin: 'idea'
+apply plugin: 'java'
+apply plugin: 'com.github.johnrengelman.shadow'
+
+archivesBaseName='verticle-worker'
+
+repositories {
+    try {
+        maven { url "$repository" }
+        println 'use custom repository: ' + "$repository"
+    } catch(Exception e) {
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+    }
+    mavenCentral()
+}
+
+buildscript {
+    repositories {
+
+        try {
+            maven { url "$repository" }
+            println 'use custom plugin repository: ' + "$repository"
+        } catch(Exception e) {
+            maven { url "https://plugins.gradle.org/m2/" }
+            println 'use standard plugin repository'
+        }
+        maven {
+            url "http://artifactory.pnet.ch/artifactory/swisspost/"
+        }
+    }
+    dependencies {
+        classpath "com.github.jengelman.gradle.plugins:shadow:1.2.3"
+    }
+}
+
+dependencies {
+    compile "io.vertx:vertx-core:$vertxVersion"
+}
+
+compileJava {
+    options.encoding = "UTF-8"
+}
+
+artifacts {
+    archives jar
+}
+
+shadowJar {
+    manifest {
+        attributes 'Main-Class': 'org.swisspush.vertx.examples.WorkerVerticleStarter'
+    }
+}
+
+test {
+    testLogging {
+        // set options for log level LIFECYCLE
+        events "started", "passed", "skipped", "failed"
+        exceptionFormat "full"
+
+        // set options for log level QUIET
+        quiet {
+            events "started", "passed", "skipped", "failed"
+            exceptionFormat "full"
+        }
+
+        // remove standard output/error logging from --info builds
+        // by assigning only 'failed' and 'skipped' events
+        info.events = ["failed", "skipped"]
+
+        afterSuite { desc, result ->
+            if (!desc.parent) { // will match the outermost suite
+                def output = "Results: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)"
+                def startItem = '|  ', endItem = '  |'
+                def repeatLength = startItem.length() + output.length() + endItem.length()
+                println('\n' + ('-' * repeatLength) + '\n' + startItem + output + endItem + '\n' + ('-' * repeatLength))
+            }
+        }
+    }
+}
+
