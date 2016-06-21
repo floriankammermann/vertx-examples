@@ -2,13 +2,11 @@ package org.swisspush.vertx.examples;
 
 
 import io.vertx.core.AbstractVerticle;
-import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
-import io.vertx.core.shareddata.Counter;
-import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
@@ -16,7 +14,7 @@ import sun.misc.BASE64Encoder;
 import javax.crypto.*;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
-import java.io.File;
+import java.io.InputStream;
 import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.KeySpec;
 import java.util.UUID;
@@ -36,8 +34,6 @@ public class CryptoVerticle extends AbstractVerticle {
     private String passPhrase = "ImSecret";
 
     private LineIterator it;
-
-    private long lap = -1;
 
     @Override
     public void start() {
@@ -59,12 +55,6 @@ public class CryptoVerticle extends AbstractVerticle {
         }
 
         log.info("deploy verticle: " + uid);
-
-        vertx.createHttpServer().requestHandler(request -> {
-            request.response().end("I'm the common verticle!");
-        }).listen(8080);
-
-        initializeLineIterator();
 
         vertx.eventBus().consumer("encrypt-"+uid, new Handler<Message<Object>>() {
             @Override
@@ -93,6 +83,7 @@ public class CryptoVerticle extends AbstractVerticle {
             }
         });
 
+        initializeLineIterator();
         vertx.eventBus().publish("encrypt-"+uid, it.nextLine());
 
     }
@@ -116,14 +107,11 @@ public class CryptoVerticle extends AbstractVerticle {
     private void initializeLineIterator() {
         try {
 
-            long now = System.currentTimeMillis();
-            if(lap != -1){
+            if(it != null) {
                 vertx.eventBus().publish("ben.hur", "increment");
             }
-            lap = now;
-
-            File file = new File(getClass().getClassLoader().getResource("ben_hur.txt").getFile());
-            it = FileUtils.lineIterator(file, "UTF-8");
+            InputStream benHurStream = ClassLoader.class.getResourceAsStream("/books/ben_hur.txt");
+            it = IOUtils.lineIterator(benHurStream, "UTF-8");
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }

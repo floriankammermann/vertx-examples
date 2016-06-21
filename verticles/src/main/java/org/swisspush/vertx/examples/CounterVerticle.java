@@ -15,7 +15,7 @@ public class CounterVerticle extends AbstractVerticle {
     public void start() {
 
         vertx.setPeriodic(10000, message -> {
-            log.info(counter.get() + " ben hurs encrypted in 10sec");
+            log.info(counter.get() + " ben hurs encrypted/decrypted in 10sec");
             counter.set(0);
         });
 
