@@ -36,7 +36,7 @@ public class HelloJugsBernTest {
         HelloJugsBern helloJugsBern = new HelloJugsBern();
         vertx.deployVerticle(helloJugsBern, context.asyncAssertSuccess(assertSuccess -> {
             log.info("verticle deployed: " + assertSuccess);
-            when().get("/").then().assertThat().statusCode(200).body("greeting", equalTo("Hello Jugs Bern"));
+            when().get("/").then().assertThat().statusCode(200).body("greeting", equalTo("Hello Jugs Bern!"));
             async.complete();
         }));
     }

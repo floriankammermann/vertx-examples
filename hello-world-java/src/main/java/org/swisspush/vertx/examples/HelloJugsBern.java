@@ -7,7 +7,9 @@ public class HelloJugsBern extends AbstractVerticle {
     @Override
     public void start() throws Exception {
         vertx.createHttpServer().requestHandler(request -> {
-            request.response().end("Hello Jugs Bern!");
+            request.response()
+                    .putHeader("content-type", "application/json; charset=utf-8")
+                    .end("{\"greeting\":\"Hello Jugs Bern!\"}");
         }).listen(8080);
     }
 }
