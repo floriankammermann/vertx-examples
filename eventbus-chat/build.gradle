@@ -4,7 +4,7 @@ apply plugin: 'maven'
 apply plugin: 'signing'
 apply plugin: 'com.github.johnrengelman.shadow'
 
-archivesBaseName='chat'
+archivesBaseName='eventbus-chat'
 
 repositories {
     try {
