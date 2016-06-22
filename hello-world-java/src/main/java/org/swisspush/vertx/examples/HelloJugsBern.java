@@ -9,7 +9,7 @@ public class HelloJugsBern extends AbstractVerticle {
         vertx.createHttpServer().requestHandler(request -> {
             request.response()
                     .putHeader("content-type", "application/json; charset=utf-8")
-                    .end("{\"greeting\":\"Hello Jugs Bern!\"}");
+                    .end("{\"greeting\":\"Hello Jugs Bern!\", \"thread\":\""+Thread.currentThread().getName()+"\"}");
         }).listen(8080);
     }
 }
