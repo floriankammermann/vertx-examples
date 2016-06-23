@@ -14,6 +14,16 @@ public class VertxHandlerTest {
 
     @Test
     public void testAdd() {
+        addition(1, 2, new Handler<Integer>() {
+            @Override
+            public void handle(Integer event) {
+                assertEquals(Integer.valueOf(3), event);
+            }
+        });
+    }
+
+    @Test
+    public void testAddLambda() {
         addition(1,2, t -> assertEquals(Integer.valueOf(3), t));
     }
 }
