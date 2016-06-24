@@ -1,10 +1,6 @@
 apply plugin: 'idea'
 apply plugin: 'java'
-apply plugin: 'maven'
-apply plugin: 'signing'
 apply plugin: 'com.github.johnrengelman.shadow'
-
-archivesBaseName='self-terminating'
 
 repositories {
     try {
@@ -25,9 +21,6 @@ buildscript {
         } catch(Exception e) {
             maven { url "https://plugins.gradle.org/m2/" }
             println 'use standard plugin repository'
-        }
-        maven {
-            url "http://artifactory.pnet.ch/artifactory/swisspost/"
         }
     }
     dependencies {
