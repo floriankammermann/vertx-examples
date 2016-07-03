@@ -10,3 +10,10 @@
 * `gradle shadowJar`
 * `java -jar build/libs/hello-world-0.0.1-SNAPSHOT-all.jar`
 * <http://localhost:8080>
+
+# Run the Example with 2 Instances
+
+* `cd vertx-examples/hello-world-java/src/main/java`
+* `vertx run org/swisspush/vertx/examples/HelloJugBern.java --instances 2`
+* `while true; clear; do curl http://localhost:8080; sleep 2; done`
+* You will see, that the requests are distributed even, between the two instances
