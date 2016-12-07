@@ -21,7 +21,7 @@ public class BootstrapListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent context) {
 
-        Vertx.vertx().deployVerticle("org.swisspush.vertx.examples.HelloJugsBern", result -> {
+        Vertx.vertx().deployVerticle("org.swisspush.vertx.examples.HelloJugBern", result -> {
             if (result.succeeded()) {
                 String deploymentID = result.result();
                 log.debug("Module has been deployed with deploymentID {}", deploymentID);

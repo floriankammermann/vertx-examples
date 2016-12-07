@@ -55,7 +55,7 @@ artifacts {
 shadowJar {
     manifest {
         attributes 'Main-Class': 'io.vertx.core.Starter'
-        attributes 'Main-Verticle': 'org.swisspush.vertx.examples.HelloJugsBern'
+        attributes 'Main-Verticle': 'org.swisspush.vertx.examples.HelloJugBern'
     }
 }
 
