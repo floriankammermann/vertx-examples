@@ -71,11 +71,13 @@ public class CryptoVerticle extends AbstractVerticle {
                 String decrypted = decrypt(event.body().toString());
                 //log.info("decrypted: " + decrypted);
 
+                // read next line until we are finished, then start over from the beginning
                 String nextLine;
                 if(it.hasNext()) {
                     nextLine = it.nextLine();
                 } else {
-                    initializeLineIterator();
+                    // set the iterator to the first line and send message to the CounterVerticle
+                    initializeLineIteratorAndPublish();
                     nextLine = it.nextLine();
                 }
                 //log.info("send next line to encrypt: " + nextLine);
@@ -83,7 +85,7 @@ public class CryptoVerticle extends AbstractVerticle {
             }
         });
 
-        initializeLineIterator();
+        initializeLineIteratorAndPublish();
         vertx.eventBus().publish("encrypt-"+uid, it.nextLine());
 
     }
@@ -104,9 +106,10 @@ public class CryptoVerticle extends AbstractVerticle {
         }
     }
 
-    private void initializeLineIterator() {
+    private void initializeLineIteratorAndPublish() {
         try {
 
+            // don't increment on load time
             if(it != null) {
                 vertx.eventBus().publish("ben.hur", "increment");
             }

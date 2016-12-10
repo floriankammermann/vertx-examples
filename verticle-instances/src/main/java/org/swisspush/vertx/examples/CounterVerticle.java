@@ -10,6 +10,7 @@ public class CounterVerticle extends AbstractVerticle {
 
     private Logger log = LoggerFactory.getLogger(CounterVerticle.class);
 
+    // atomic is not really needed, since we have only one CounterVerticle
     private AtomicInteger counter = new AtomicInteger(0);
 
     public void start() {
