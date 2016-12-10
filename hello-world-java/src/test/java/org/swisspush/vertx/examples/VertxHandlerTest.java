@@ -12,6 +12,7 @@ public class VertxHandlerTest {
         handler.handle(result);
     }
 
+    /* example with anonymous innerclass */
     @Test
     public void testAdd() {
         addition(1, 2, new Handler<Integer>() {
@@ -22,6 +23,7 @@ public class VertxHandlerTest {
         });
     }
 
+    /* example with lamda, java 8 */
     @Test
     public void testAddLambda() {
         addition(1,2, t -> assertEquals(Integer.valueOf(3), t));
