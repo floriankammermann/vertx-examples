@@ -32,10 +32,10 @@ public class GreeterTest {
         RestAssured.registerParser("application/json; charset=utf-8", Parser.JSON);
         RestAssured.defaultParser = Parser.JSON;
 
-        Greeter helloJugsBern = new Greeter();
-        vertx.deployVerticle(helloJugsBern, context.asyncAssertSuccess(assertSuccess -> {
+        Greeter greeter = new Greeter();
+        vertx.deployVerticle(greeter, context.asyncAssertSuccess(assertSuccess -> {
             log.info("verticle deployed: " + assertSuccess);
-            when().get("/").then().assertThat().statusCode(200).body("greeting", equalTo("Hello Jug Bern!"));
+            when().get("/").then().assertThat().statusCode(200).body("greeting", equalTo("Hello Impacthub!"));
             async.complete();
         }));
     }
