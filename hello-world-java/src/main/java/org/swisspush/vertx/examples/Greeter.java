@@ -2,7 +2,7 @@ package org.swisspush.vertx.examples;
 
 import io.vertx.core.AbstractVerticle;
 
-public class HelloJugBern extends AbstractVerticle {
+public class Greeter extends AbstractVerticle {
 
     @Override
     public void start() throws Exception {

@@ -18,9 +18,9 @@ import static org.hamcrest.CoreMatchers.equalTo;
  * Created by florian kammermann on 14.06.2016.
  */
 @RunWith(VertxUnitRunner.class)
-public class HelloJugBernTest {
+public class GreeterTest {
 
-    private Logger log = LoggerFactory.getLogger(HelloJugBernTest.class);
+    private Logger log = LoggerFactory.getLogger(GreeterTest.class);
 
     @Test
     public void responseTest(TestContext context) {
@@ -32,7 +32,7 @@ public class HelloJugBernTest {
         RestAssured.registerParser("application/json; charset=utf-8", Parser.JSON);
         RestAssured.defaultParser = Parser.JSON;
 
-        HelloJugBern helloJugsBern = new HelloJugBern();
+        Greeter helloJugsBern = new Greeter();
         vertx.deployVerticle(helloJugsBern, context.asyncAssertSuccess(assertSuccess -> {
             log.info("verticle deployed: " + assertSuccess);
             when().get("/").then().assertThat().statusCode(200).body("greeting", equalTo("Hello Jug Bern!"));
