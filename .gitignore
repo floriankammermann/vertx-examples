@@ -2,3 +2,4 @@
 .vertx
 .gradle
 *.iml
+.idea/*
