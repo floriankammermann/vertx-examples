@@ -1,3 +1,3 @@
 # vert.x Examples
 
-Check out the [presentation](https://github.com/floriankammermann/vertx-gateleen-presentation)
+Check out the specific examples for the documentation.
