@@ -1,0 +1,88 @@
+apply plugin: 'idea'
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'signing'
+apply plugin: 'com.github.johnrengelman.shadow'
+
+archivesBaseName='reactive-streams'
+
+repositories {
+    try {
+        maven { url "$repository" }
+        println 'use custom repository: ' + "$repository"
+    } catch(Exception e) {
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+    }
+    mavenCentral()
+}
+
+buildscript {
+    repositories {
+
+        try {
+            maven { url "$repository" }
+            println 'use custom plugin repository: ' + "$repository"
+        } catch(Exception e) {
+            maven { url "https://plugins.gradle.org/m2/" }
+            println 'use standard plugin repository'
+        }
+        maven {
+            url "http://artifactory.pnet.ch/artifactory/swisspost/"
+        }
+    }
+    dependencies {
+        classpath "com.github.jengelman.gradle.plugins:shadow:1.2.3"
+    }
+}
+
+dependencies {
+    compile "io.vertx:vertx-core:$vertxVersion"
+
+    testCompile "junit:junit:$junitVersion"
+    testCompile "io.vertx:vertx-unit:$vertxVersion"
+    testCompile 'com.jayway.restassured:rest-assured:2.4.1'
+    testCompile 'com.jayway.awaitility:awaitility-scala:1.6.3'
+}
+
+compileJava {
+    options.encoding = "UTF-8"
+}
+
+artifacts {
+    archives jar
+}
+
+shadowJar {
+    manifest {
+        attributes 'Main-Class': 'io.vertx.core.Starter'
+        attributes 'Main-Verticle': 'org.swisspush.vertx.examples.Stream'
+    }
+}
+
+test {
+    testLogging {
+        // set options for log level LIFECYCLE
+        events "started", "passed", "skipped", "failed"
+        exceptionFormat "full"
+
+        // set options for log level QUIET
+        quiet {
+            events "started", "passed", "skipped", "failed"
+            exceptionFormat "full"
+        }
+
+        // remove standard output/error logging from --info builds
+        // by assigning only 'failed' and 'skipped' events
+        info.events = ["failed", "skipped"]
+
+        afterSuite { desc, result ->
+            if (!desc.parent) { // will match the outermost suite
+                def output = "Results: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)"
+                def startItem = '|  ', endItem = '  |'
+                def repeatLength = startItem.length() + output.length() + endItem.length()
+                println('\n' + ('-' * repeatLength) + '\n' + startItem + output + endItem + '\n' + ('-' * repeatLength))
+            }
+        }
+    }
+}
+
