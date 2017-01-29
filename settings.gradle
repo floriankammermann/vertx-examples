@@ -1,1 +1,8 @@
 include 'hello-world-java'
+include 'hello-world-embedded'
+include 'hello-world-js'
+include 'eventbus-chat'
+include 'verticle-instances'
+include 'verticle-worker'
+include 'shell'
+include 'self-terminating'
