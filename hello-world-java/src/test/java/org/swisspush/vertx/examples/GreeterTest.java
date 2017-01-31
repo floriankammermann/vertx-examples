@@ -37,7 +37,7 @@ public class GreeterTest {
         vertx.deployVerticle(greeter, result -> {
             if(result.succeeded()) {
                 log.info("verticle deployed: " + result.result());
-                when().get("/").then().assertThat().statusCode(200).body("greeting", equalTo("Hello Impacthub!"));
+                when().get("/").then().assertThat().statusCode(200).body("greeting", equalTo("Hello jug!"));
                 async.complete();
             } else {
                 log.error("failed to deploy verticle: " + result.cause());

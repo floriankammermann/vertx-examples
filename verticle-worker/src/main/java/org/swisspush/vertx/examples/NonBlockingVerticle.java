@@ -13,7 +13,7 @@ public class NonBlockingVerticle extends AbstractVerticle {
     public void start() {
 
         vertx.createHttpServer().requestHandler(request -> {
-            request.response().end("Hello Impacthub!");
+            request.response().end("Hello jug!");
         }).listen(8080);
 
     }
